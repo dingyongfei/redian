@@ -1,0 +1,96 @@
+#parse("header.html")
+<div id="main">
+    <div class="container">
+        <ul class="letter-chatlist">
+            #foreach($msg in $messages)
+            <li id="msg-item-4009580">
+                <a class="list-head" href="/user/$!{msg.userId}">
+                    <img alt="头像" src="$!{msg.headUrl}">
+                </a>
+                <div class="tooltip fade right in">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip-inner letter-chat clearfix">
+                        <div class="letter-info">
+                            <p class="letter-time">$date.format('yyyy-MM-dd HH:mm:ss', $!{msg.message.createdDate})</p>
+                            <a href="javascript:void(0);" id="del-link" name="4009580">删除</a>
+                        </div>
+                        <p class="chat-content">
+                            $!{msg.message.content}
+                        </p>
+                    </div>
+                </div>
+            </li>
+            #end
+        </ul>
+
+
+        <div class="post-message-form">
+            #if($user)
+            <span>私信给 </span>
+            <a href="/user/$!{sendUser.id}" id="del-link" name="4009580"> $!{sendUser.name}</a>
+            <form method="post" action="/msg/addMessage?fromId=$!{user.id}&toId=$!{sendUser.id}">
+                <input name="newsId" type="hidden" value="$!{news.id}">
+
+                <div class="form-group text required comment_content">
+                    <label class="text required sr-only">
+                        <abbr title="required">*</abbr> 发送</label>
+                    <textarea rows="2" class="text required comment-content form-control" name="content"
+                              id="content"></textarea>
+                </div>
+                <div class="text-right">
+                    <input type="submit" name="commit" value="发 送" class="btn btn-default btn-info">
+                </div>
+            </form>
+            #else
+            <div class="login-actions">
+                <a class="btn btn-success" href="/?pop=1">请登录</a>
+            </div>
+            #end
+        </div>
+
+
+    </div>
+    <script type="text/javascript">
+          $(function(){
+
+            // If really is weixin
+            $(document).on('WeixinJSBridgeReady', function() {
+
+              $('.weixin-qrcode-dropdown').show();
+
+              var options = {
+                "img_url": "",
+                "link": "http://nowcoder.com/j/wt2rwy",
+                "desc": "",
+                "title": "读《Redis设计与实现》"
+              };
+
+              WeixinJSBridge.on('menu:share:appmessage', function (argv){
+                WeixinJSBridge.invoke('sendAppMessage', options, function (res) {
+                  // _report('send_msg', res.err_msg)
+                });
+              });
+
+              WeixinJSBridge.on('menu:share:timeline', function (argv) {
+                WeixinJSBridge.invoke('shareTimeline', options, function (res) {
+                  // _report('send_msg', res.err_msg)
+                });
+              });
+
+              // $(window).on('touchmove scroll', function() {
+              //   if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+              //     $('div.backdrop').show();
+              //     $('div.share-help').show();
+              //   } else {
+              //     $('div.backdrop').hide();
+              //     $('div.share-help').hide();
+              //   }
+              // });
+
+            });
+
+          })
+
+    </script>
+</div>
+#parse("footer.html")
