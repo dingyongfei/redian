@@ -1,1 +1,1 @@
-# Project_redian is a news website.
+redian is a news website project.
